@@ -6,5 +6,5 @@ module.exports.hello = function (context, req) {
 
   // Read properties from the incoming request, and respond as appropriate.
   const name = req.query.name || (req.body && req.body.name) || 'World';
-  context.done(null, { body: `Hello ${name}` });
+  context.done(null, { body: `Hello ${name} from Travis` });
 };

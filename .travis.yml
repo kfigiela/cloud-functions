@@ -3,7 +3,7 @@ services:
 - docker
 language: node_js
 node_js:
-  - "6"
+- '6'
 env:
   matrix:
   - PROVIDER=google
@@ -14,7 +14,7 @@ env:
   - azureSubId=09f8875a-6349-4bad-aa48-290ee9895861
   - azureServicePrincipalTenantId=33ece144-e0a8-4c38-982c-ad40d89eafd1
   - azureServicePrincipalClientId=acf06957-006f-4635-abe5-b9ff835fec06
-  - secure: BIdG+UHLzL5UFpxRsMVp9ZdVMnRwEZH3XUrq1cNClN7ZovmQL4m0Ph3KDO+M3njZn+Nh4qmpIehl/w/2f5MqPgOa7+dKtb62q8647/OVJKMIHd1XDCfZ7KozVgw1ZVRT/IabOQ0hEgtgiJK0ITa9p1c1NQO2U77LRKUawOYoVAGeyQW3EXiQp9S5Yt2qhapzI8kSEI+w2PcU5UF3u1+G0p2EFgls+6k6dsOcXMDHQVCzF9+tDr6V9eH+OgzS3KgdDA+Qs2+TzvwYAB0ftnlKptFe/AfMMIsbGa2erlnBefVpYwKvlq/CKrmh8WwpC6xpUI/U4pRbrkyvBegCOnTfl7D6t1QPojI2X+iQjyA2ylp1nxUw4YwEejtAKPp7YMpX3Fnve9R300azOQHAhj+lvNipfzYPz2om3YpYBJyFCshJr5pK8tycSNqRzyjohZEO8F0dNXOjQ8SFECmyJ1KijFxGKq6Kd+v892NAc6NkvE65ogFiQmLxtYKfvXDBCIzoDikm9H1TxDfmL1XiuXrgDMOT5RbFca5t0xs60v9nrUlQbSVyJnO3R2I9JH7EJ3tiwnk9I7jQNmUIrDKY7FB3mcV0zKTSX0JTT7rR46Ok0Z4F5wKNkfnMn76EbYEnGiOYOtjh3wP4uaRieD/uuyw0xj9OmsyR4JuGCN9lKih4Xiw=
+  - secure: oabW3rp2yfFqX1kho3lkbZwq2sp+NQpX1Y0wzVm58weaxqtbpDbpr/t8oWdvQwX7UN1Yjwco3afx1rNa/jaw3NMo7Ku1+YfnT40Sdq9GfPBGKNL2ISasvkk2UaqFtdADltvg8+eLTrXJ149+SpcAEro8gu0M9q2TLatQMt8qgQfHNTvpsoRGPabNj7dDAS3m5rgyciskolwwPaXeFbpKyq/sHcW9O5oPXpNIKjS+2snE753D2lVPqdReyCkHOeHeQGHvIJZ6FNpG5vKy3vx+R1Fndv36jeRbaNPxmcig4mIx4Qcw2p2OV3jZ7i9yli1pAO4jXvIxn2IuF2l5mPhrR0m72IlHKp7tm1ivD8pIL/ZhMDl5UHw/NbuyzynMzUcJbIfrxqCGkCZTNn2iskBGk+Icf+nba/iMhz5xNI6sY72mhK0cJ9pnzRdbw9LBILL0h+VcizU60aYJfPMcc15ST1xquCbLti7V5mXGWfwS5EoXvve/Y9+NvZcHby2lB72JXMVX78c3i1twjyfFzvJWErePz6aapzv0HzP4ZTABfH0Qw9XzGIO9UfnfQw8W6NaMC+f7lJ7G+kehfslcsf/Ah+10gaZ52xm8igRdXPpirclGy0pDPdU/pzrCnB9UNHiWQZ/5YzEfTBbgkX3aF67OmpeFgH6bLqJWybdsuwIyui8=
   - AWS_IAM_ROLE=arn:aws:iam::524374011118:role/lambdaRole
   - AWS_REGION=eu-west-1
   - AWS_ACCESS_KEY_ID=AKIAIU77AXAV2UQECR3A

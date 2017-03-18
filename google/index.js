@@ -2,7 +2,7 @@
 
 exports.http = (request, response) => {
   console.log('Hello from "http"');
-  response.status(200).send('Hello World!');
+  response.status(200).send('Hello World from Travis!');
 };
 
 exports.event = (event, callback) => {
