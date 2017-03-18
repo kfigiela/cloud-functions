@@ -1,0 +1,15 @@
+sudo: required
+services:
+  - docker
+language: node_js
+env:
+  - PROVIDER=google
+  - PROVIDER=aws
+  - PROVIDER=azure
+  - PROVIDER=openwhisk
+before_install:
+  - npm install -g serverless
+script:
+  - cd $provider
+  - npm install
+  - serverless deploy
