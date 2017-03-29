@@ -25,7 +25,9 @@ before_install:
 - npm install -g serverless
 - openssl aes-256-cbc -K $encrypted_d7975d884fb5_key -iv $encrypted_d7975d884fb5_iv
   -in google/keyfile.json.enc -out google/keyfile.json -d
+- docker pull kfigiela/amazon-linux-development-tools
 script:
 - cd $PROVIDER
+- ./build_native.sh
 - npm install
 - serverless deploy

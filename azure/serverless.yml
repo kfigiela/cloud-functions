@@ -25,9 +25,9 @@ plugins:
   - serverless-azure-functions
 
 # you can add packaging information here
-#package:
-#  include:
-#    - include-me.js
+package:
+ include:
+   - hello.exe
 #    - include-me-dir/**
 #  exclude:
 #    - exclude-me.js
