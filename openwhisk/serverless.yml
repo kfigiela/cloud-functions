@@ -21,9 +21,9 @@ provider:
   name: openwhisk
 
 # you can add packaging information here
-#package:
-#  include:
-#    - include-me.js
+package:
+ include:
+   - bin/hello
 #    - include-me-dir/**
 #  exclude:
 #    - exclude-me.js
