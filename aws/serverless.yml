@@ -11,7 +11,7 @@
 #
 # Happy Coding!
 
-service: cloud-functions-research
+service: ${env:AWS_SERVICE_NAME}-${env:MEMORY}
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
@@ -19,11 +19,13 @@ service: cloud-functions-research
 
 provider:
   name: aws
-  runtime: nodejs4.3
+  runtime: nodejs6.10
 
 # you can overwrite defaults here
   stage: dev
   region: eu-west-1
+  memorySize: ${env:MEMORY}
+  timeout: 240
 
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
@@ -55,15 +57,40 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
-  hello:
+  hello-128:
     handler: handler.hello
-
-#    The following are a few example events you can configure
-#    NOTE: Please make sure to change your handler code to work with those events
-#    Check the event documentation for details
+    memorySize: 128
     events:
       - http:
-          path: hello
+          path: hello-128
+          method: get
+  hello-256:
+    handler: handler.hello
+    memorySize: 256
+    events:
+      - http:
+          path: hello-256
+          method: get
+  hello-512:
+    handler: handler.hello
+    memorySize: 512
+    events:
+      - http:
+          path: hello-512
+          method: get
+  hello-1024:
+    handler: handler.hello
+    memorySize: 1024
+    events:
+      - http:
+          path: hello-1024
+          method: get
+  hello-1536:
+    handler: handler.hello
+    memorySize: 1536
+    events:
+      - http:
+          path: hello-1536
           method: get
 #      - s3: ${env:BUCKET}
 #      - schedule: rate(10 minutes)

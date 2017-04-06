@@ -1,16 +1,21 @@
-'use strict';
-var exec = require('child_process').exec;
+const exec = require('child_process').exec;
+
 process.env['PATH'] = process.env['PATH'] + ':' + process.env['LAMBDA_TASK_ROOT'] + "/bin"
 
 
-module.exports.hello = (event, context, callback) => {
+exports.hello = (event, context, callback) => {
+  const t = process.hrtime();
+
   exec('hello', function(error, stdout, stderr) {
+    [s, ns] = process.hrtime(t);
+
     const response = {
       statusCode: 200,
       body: JSON.stringify({
         message: 'Hello Travis! Your function executed successfully!',
         input: event,
-        exec: {"stdout":stdout, "stderr": stderr, "error": error}
+        exec: {"stdout":stdout, "stderr": stderr, "error": error},
+        time: [s, ns]
       }),
     };
     callback(null, response);

@@ -11,6 +11,7 @@ env:
   - PROVIDER=azure
   - PROVIDER=openwhisk
   global:
+  - AWS_SERVICE_NAME=cloud-functions-research
   - azureSubId=09f8875a-6349-4bad-aa48-290ee9895861
   - azureServicePrincipalTenantId=33ece144-e0a8-4c38-982c-ad40d89eafd1
   - azureServicePrincipalClientId=acf06957-006f-4635-abe5-b9ff835fec06
@@ -27,7 +28,7 @@ before_install:
   -in google/keyfile.json.enc -out google/keyfile.json -d
 - docker pull kfigiela/amazon-linux-development-tools
 script:
+- $PROVIDER/build_native.sh
 - cd $PROVIDER
-- ./build_native.sh
 - npm install
 - serverless deploy
