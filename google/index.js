@@ -12,6 +12,12 @@ exports.http = (request, response) => {
   });
 };
 
+exports.hello_128 = exports.http;
+exports.hello_256 = exports.http;
+exports.hello_512 = exports.http;
+exports.hello_1024 = exports.http;
+exports.hello_2048 = exports.http;
+
 exports.event = (event, callback) => {
   console.log('Hello from "event"');
   callback();

@@ -6,6 +6,7 @@ provider:
   project: ninth-potion-161615
   # the path to the credentials file needs to be absolute
   credentials: keyfile.json
+  timeout: 240s
 
 plugins:
   - serverless-google-cloudfunctions
@@ -20,8 +21,29 @@ package:
     - .git/**
 
 functions:
-  first:
-    handler: http
+  hello_128:
+    handler: hello_128
+    memorySize: 128
+    events:
+      - http: path
+  hello_256:
+    handler: hello_256
+    memorySize: 256
+    events:
+      - http: path
+  hello_512:
+    handler: hello_512
+    memorySize: 512
+    events:
+      - http: path
+  hello_1024:
+    handler: hello_1024
+    memorySize: 1024
+    events:
+      - http: path
+  hello_2048:
+    handler: hello_2048
+    memorySize: 2048
     events:
       - http: path
 

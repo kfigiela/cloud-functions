@@ -33,19 +33,19 @@ package:
 functions:
   hello-128:
     handler: handler.hello
-    memorySize: 128
+    memory: 128
     events:
-      - http: GET hello
+      - http: GET hello-128
   hello-256:
     handler: handler.hello
-    memorySize: 256
+    memory: 256
     events:
-      - http: GET hello
+      - http: GET hello-256
   hello-512:
     handler: handler.hello
-    memorySize: 512
+    memory: 512
     events:
-      - http: GET hello
+      - http: GET hello-512
 
 #    Functions can be defined using sequences rather than referring
 #    to a handler.

@@ -39,4 +39,4 @@ jspm_packages
 .autoenv.zsh
 .serverless
 google/keyfile.json
-bin/hello
+*/bin/hello
