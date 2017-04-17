@@ -8,8 +8,6 @@ module.exports.hello = function (context, req) {
     [s, ns] = process.hrtime(t);
 
     const response = JSON.stringify({
-        message: 'Hello Travis! Your function executed successfully!',
-        input: event,
         exec: {"stdout":stdout, "stderr": stderr, "error": error},
         time: [s, ns]
     });
