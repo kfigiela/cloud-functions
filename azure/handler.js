@@ -8,6 +8,7 @@ module.exports.hello = function (context, req) {
     const t2 = process.hrtime(t);
 
     const response = {
+        ts:   (new Date()).toString(),
         exec: {"stdout":stdout, "stderr": stderr, "error": error},
         time: [t2[0], t2[1]]
     };

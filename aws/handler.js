@@ -12,6 +12,7 @@ exports.hello = (event, context, callback) => {
     const response = {
       statusCode: 200,
       body: JSON.stringify({
+        ts:   (new Date()).toString(),
         exec: {"stdout":stdout, "stderr": stderr, "error": error},
         time: [t2[0], t2[1]]
       }),

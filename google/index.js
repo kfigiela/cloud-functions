@@ -8,6 +8,7 @@ exports.http = (request, response) => {
     const t2 = process.hrtime(t);
 
     const resp = JSON.stringify({
+        ts:   (new Date()).toString(),
         exec: {"stdout":stdout, "stderr": stderr, "error": error},
         time: [t2[0], t2[1]]
     });
