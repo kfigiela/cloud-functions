@@ -7,11 +7,11 @@ exports.http = (request, response) => {
   exec('bin/hello', function(error, stdout, stderr) {
     [s, ns] = process.hrtime(t);
 
-    const response = JSON.stringify({
+    const resp = JSON.stringify({
         exec: {"stdout":stdout, "stderr": stderr, "error": error},
         time: [s, ns]
     });
-    response.status(200).send(response);
+    response.status(200).send(resp);
   });
 };
 
