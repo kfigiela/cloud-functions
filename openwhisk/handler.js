@@ -8,11 +8,11 @@ function hello(params) {
     const t = process.hrtime();
 
     exec(`chmod +x ${__dirname}/bin/hello && ${__dirname}/bin/hello`, function(error, stdout, stderr) {
-      [s, ns] = process.hrtime(t);
+      const t2 = process.hrtime(t);
 
       const resp = {
           exec: {"stdout":stdout, "stderr": stderr, "error": error},
-          time: [s, ns]
+          time: [t2[0], t2[1]]
       };
       resolve(resp)
     });

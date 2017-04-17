@@ -5,13 +5,13 @@ module.exports.hello = function (context, req) {
   const t = process.hrtime();
 
   exec(__dirname + "\\hello.exe", function(error, stdout, stderr) {
-    [s, ns] = process.hrtime(t);
+    const t2 = process.hrtime(t);
 
-    const response = JSON.stringify({
+    const response = {
         exec: {"stdout":stdout, "stderr": stderr, "error": error},
-        time: [s, ns]
-    });
-    context.done(null, { body: resp });
+        time: [t2[0], t2[1]]
+    };
+    context.done(null, { body: response });
   });
 };
 

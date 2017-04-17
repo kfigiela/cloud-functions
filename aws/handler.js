@@ -7,13 +7,13 @@ exports.hello = (event, context, callback) => {
   const t = process.hrtime();
 
   exec('hello', function(error, stdout, stderr) {
-    [s, ns] = process.hrtime(t);
+    const t2 = process.hrtime(t);
 
     const response = {
       statusCode: 200,
       body: JSON.stringify({
         exec: {"stdout":stdout, "stderr": stderr, "error": error},
-        time: [s, ns]
+        time: [t2[0], t2[1]]
       }),
     };
     callback(null, response);

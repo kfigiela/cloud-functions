@@ -2,17 +2,17 @@
 var exec = require('child_process').exec;
 
 module.exports.hello = function (context, req) {
-  // Add any neccessary telemetry to support diagnosing your function
-  context.log('HTTP trigger occured!');
+  const t = process.hrtime();
 
   exec(__dirname + "\\hello.exe", function(error, stdout, stderr) {
-    const name = req.query.name || (req.body && req.body.name) || 'World';
-    const resp = JSON.stringify({
-        message: 'Hello Travis! Your function executed successfully!',
+    const t2 = process.hrtime(t);
+
+    const response = {
         exec: {"stdout":stdout, "stderr": stderr, "error": error},
-        dir: __dirname
-    });
-    context.done(null, { body: resp });
+        time: [t2[0], t2[1]]
+    };
+    context.done(null, { body: response });
   });
-  // Read properties from the incoming request, and respond as appropriate.
 };
+
+
