@@ -2,13 +2,18 @@
 var exec = require('child_process').exec;
 
 exports.http = (request, response) => {
-  console.log('Hello from "http"');
+  const t = process.hrtime();
+
   exec('bin/hello', function(error, stdout, stderr) {
-    var resp = JSON.stringify({
+    [s, ns] = process.hrtime(t);
+
+    const response = JSON.stringify({
         message: 'Hello Travis! Your function executed successfully!',
-        exec: {"stdout":stdout, "stderr": stderr, "error": error}
+        input: event,
+        exec: {"stdout":stdout, "stderr": stderr, "error": error},
+        time: [s, ns]
     });
-    response.status(200).send(resp);
+    response.status(200).send(response);
   });
 };
 
@@ -22,3 +27,4 @@ exports.event = (event, callback) => {
   console.log('Hello from "event"');
   callback();
 };
+
