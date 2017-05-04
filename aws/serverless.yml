@@ -26,6 +26,11 @@ provider:
   region: eu-west-1
   timeout: 240
 
+  environment:
+    INFLUX_ENDPOINT: ${env:INFLUX_ENDPOINT}
+    INFLUX_USER:     ${env:INFLUX_USER}
+    INFLUX_PASSWORD: ${env:INFLUX_PASSWORD}
+
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
 #    - Effect: "Allow"
@@ -59,6 +64,8 @@ functions:
   hello-128:
     handler: handler.hello
     memorySize: 128
+    environment:
+      MEMORY: 128
     events:
       - http:
           path: hello-128
@@ -66,6 +73,8 @@ functions:
   hello-256:
     handler: handler.hello
     memorySize: 256
+    environment:
+      MEMORY: 256
     events:
       - http:
           path: hello-256
@@ -73,6 +82,8 @@ functions:
   hello-512:
     handler: handler.hello
     memorySize: 512
+    environment:
+      MEMORY: 512
     events:
       - http:
           path: hello-512
@@ -80,6 +91,8 @@ functions:
   hello-1024:
     handler: handler.hello
     memorySize: 1024
+    environment:
+      MEMORY: 1024
     events:
       - http:
           path: hello-1024
@@ -87,6 +100,8 @@ functions:
   hello-1536:
     handler: handler.hello
     memorySize: 1536
+    environment:
+      MEMORY: 1536
     events:
       - http:
           path: hello-1536
