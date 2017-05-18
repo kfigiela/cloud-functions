@@ -62,7 +62,7 @@ provider:
 
 functions:
   hello-128:
-    handler: handler.hello
+    handler: handler.hello128
     memorySize: 128
     environment:
       MEMORY: 128

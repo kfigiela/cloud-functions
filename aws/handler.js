@@ -19,6 +19,24 @@ exports.hello = (event, context, callback) => {
       }),
     };
     callback(null, response);
+  });
+};
+
+exports.hello128 = (event, context, callback) => {
+  const t = process.hrtime();
+
+  exec('hello', function(error, stdout, stderr) {
+    const t2 = process.hrtime(t);
+
+    const response = {
+      statusCode: 200,
+      body: JSON.stringify({
+        ts:   (new Date()).toString(),
+        exec: {"stdout":stdout, "stderr": stderr, "error": error},
+        time: [t2[0], t2[1]]
+      }),
+    };
+    callback(null, response);
     const influxLine = `experiment,provider=aws,memory=${process.env.MEMORY} value=${t2[0] + t2[1]/1000000000}`;
     request({
       method: "POST",
