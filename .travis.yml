@@ -7,6 +7,7 @@ node_js:
 env:
   matrix:
   - PROVIDER=google
+  - PROVIDER=google2
   - PROVIDER=aws
   - PROVIDER=azure
   - PROVIDER=openwhisk
@@ -29,6 +30,8 @@ before_install:
 - npm install -g serverless
 - openssl aes-256-cbc -K $encrypted_d7975d884fb5_key -iv $encrypted_d7975d884fb5_iv
   -in google/keyfile.json.enc -out google/keyfile.json -d
+- openssl aes-256-cbc -K $encrypted_76ea0603f64c_key -iv $encrypted_76ea0603f64c_iv
+  -in google2/keyfile.json.enc -out google2/keyfile.json -d
 - docker pull kfigiela/amazon-linux-development-tools
 script:
 - $PROVIDER/build_native.sh

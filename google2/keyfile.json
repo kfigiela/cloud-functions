@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "cloud-functions-2-168708",
+  "private_key_id": "7a56bfe4bfff2c7137f898488da993af1d46652e",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDG9OY6UlNT66Aj\nc6xA01r1FAfQHXC02JcFblSoy4ztv6FFdPIwt+BQDh2kvh1Qos9SCIyNqH88Pg5B\ne79MnxDwOzm4DX3HvhJiE6dbYrzuhyRztI4yeeEdIiHEK9fuRnkEP0F8+pTFD02b\nU/LhbsIwMcvIXjIiKpcHyyxl6LtYLjpAkTITGG6nfoSsPGF8J98DVpu3Rw3JJ/Xh\n9O21G9RLasp125J4yeL+xhYVhN87h6f0jzFF4ta4s7CepzhoJ4pFGam0auJww1vL\nyO2yTNz7RerKAU4JZy7P2dBtOj7W22Hgj4rBtjWNFTG2OrArCdcSn8FfJyA0qImn\nhV89fI9rAgMBAAECggEAGxiQYGIE6jl9akafL4b5bMZJGB1iU6bpznoLup9aNqjy\nEFEQiPUJ7i01+VFREcHSpXP3nHVVusEi1OVDFO7W8jjGsBvaRQFMZKITmV0VqRCr\ntLxi31n9ACg9XAeylUdwxNTOmPRRnZLreVuSCQS6GrE1dTjq7/9H6W5QwiJTnXsU\nW1eykl1oLzteyNcKLFrD8hIdGrb7cywH5MBj+A9lEXyCAqsgd4i9PvjaIlM0b2gB\nX8XDlLD1S7FJP0fEZ/ZPgHod62cqB8P6tjUC0KlpdifD1Tq6xATSMIHNOwzaeIfc\nOecqY2zN8FNT2BBolBwkUgZ0KevW17Vn83Mcw2YmKQKBgQD9y2W7mtjqiHsFqgDS\noUbXP3A1YMvqPAOnAHG8iNDN2Cch0XcICFELjudc/QbMT41ZUQ71MKnqYyAc1QgI\nZ8srbBWYYfeIduUzdk6f96RBkybhzenoFuTtvvDeavdOLjHsPxEwc0ArbpO3ckSu\nX3CQxXeD+knTIrOrXcTvmuZR+QKBgQDIr4HTimPXG69bfpot2x/kcr4ydQ2reGQb\n62KeFFj9VTQZVAIDwk9RBxejn0mbeRR0/iG0FtAmEQnvS5CKQbTMN7+qFMSQ6w2n\nxsPFh0ETie4/YUsnoPplguRVyG+56JHrLQiw/q1MjpY9CGVU4tp4cmSJu//4SQEV\nC8EIQ+zFgwKBgCK8lh4JYasoJv5teFNb86A+dJM5vm8+65kN/IM7jqi97w036DzX\nNpCIbK5Ti3ynXsdcytlQYdFM4/ZOSh0sZ6h30LTco86vx0s15CkM8hRvmaDKWDuF\n9qt7uOgYZ+Txea/GKgohnCTVq64uG6xqL7QA8wzDUxts4n6QBQZugxuxAoGAViqd\nOKHj6llVupgqROQf1mu55FpD60q+2QoBBtS/vM4Xl4RtdQW6HpVH/hYHebzMHst6\n1yMwbhfExz0Pq304zrJlFfbiy0JRU6dRKX/AXk5LwGTa6wIAYROJTJfJ+O21sV9d\nqvk+mW9jbIMtVvwsR6j+J/FTn1xhHZM1Z4IaqFcCgYEAlMYLSfriw3r2gUJOZ+1O\nmHjqLtdOjoHVwobVF32GSrlAR5gfXibScmcDGcRw7OJgIwl0v5le8msTwvLY5OX2\nnqC4ClZerUV4XGA9cvPi3fQ6tCC/xPXW3PwfunIbtKA3KJsd5NUXuek8X6uVB6kO\n8Bts+KQdIiujRjj0lj/D4Ow=\n-----END PRIVATE KEY-----\n",
+  "client_email": "serverless-framework@cloud-functions-2-168708.iam.gserviceaccount.com",
+  "client_id": "115750880499165707319",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/serverless-framework%40cloud-functions-2-168708.iam.gserviceaccount.com"
+}
