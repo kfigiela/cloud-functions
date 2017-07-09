@@ -9,6 +9,7 @@
   "author": "serverless.com",
   "license": "MIT",
   "dependencies": {
+    "google-cloud": "^0.56.0",
     "serverless-google-cloudfunctions": "^1.0.0"
   }
 }
