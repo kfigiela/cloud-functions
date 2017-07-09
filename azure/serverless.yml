@@ -11,7 +11,7 @@
 #
 # Happy Coding!
 
-service: cloud-functions-research
+service: serverless-azure-random
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
@@ -40,6 +40,10 @@ functions:
       - http: true
         x-azure-settings:
           authLevel : anonymous
+      - http: true
+        x-azure-settings:
+          diections: out
+          name: res
 
 # The following are a few examples of other events you can configure:
 #
