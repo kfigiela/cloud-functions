@@ -9,5 +9,9 @@
   ],
   "devDependencies": {
     "serverless-azure-functions": "*"
+  },
+  "dependencies": {
+    "azure-storage": "^2.2.1",
+    "bluebird": "^3.5.0"
   }
 }
