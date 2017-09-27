@@ -12,7 +12,19 @@ provider:
     - Effect: "Allow"
       Action:
         - "s3:ListBucket"
-      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "RandomBucket" } ] ]  }
+      Resource:
+        Fn::Join:
+          - ""
+          - - "arn:aws:s3:::"
+            - { "Ref" : "RandomBucket" }
+    - Effect: "Allow"
+      Action:
+        - "s3:ListBucket"
+      Resource:
+        Fn::Join:
+          - ""
+          - - "arn:aws:s3:::"
+            - ${env:S3_FILES_BUCKET_NAME}
     - Effect: "Allow"
       Action:
         - "s3:PutObject"
@@ -23,9 +35,19 @@ provider:
           - - "arn:aws:s3:::"
             - "Ref" : "RandomBucket"
             - "/*"
+    - Effect: "Allow"
+      Action:
+        - "s3:GetObject"
+      Resource:
+        Fn::Join:
+          - ""
+          - - "arn:aws:s3:::"
+            - ${env:S3_FILES_BUCKET_NAME}
+            - "/*"
 
   environment:
     BUCKET_NAME: { "Ref" : "RandomBucket" }
+    FILES_BUCKET_NAME: ${env:S3_FILES_BUCKET_NAME}
 
 functions:
   hello-128:
