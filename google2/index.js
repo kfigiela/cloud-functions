@@ -1,82 +1,58 @@
-const exec = require('child_process').exec
 const runtimeConfig = require('cloud-functions-runtime-config')
 const storage = require('@google-cloud/storage')()
 const stream = require('stream')
 const Promise = require('bluebird')
+const ResponseBuilder = require('cloud-functions-common').ResponseBuilder
+const streamToPromise = require('cloud-functions-common').streamToPromise
+const execToPromise = require('cloud-functions-common').execToPromise
+
+const CONFIG_KEY = 'dev-config'
+const INPUT_BUCKET_CONFIG_KEY = 'FILES_BUCKET_NAME'
+const OUTPUT_BUCKET_CONFIG_KEY = 'BUCKET_NAME'
+
+function downloadRequest(fileName) {
+  return runtimeConfig.getVariable(CONFIG_KEY, INPUT_BUCKET_CONFIG_KEY)
+    .then(inputBucketName => {
+      const inputBucket = storage.bucket(inputBucketName)
+      const inputFile = inputBucket.file(fileName)
+
+      return inputFile.download()
+        .then(data => {
+          return {data, size: `${data.length}kB`}
+        })
+    })
+}
+
+function uploadRequest(data) {
+  return runtimeConfig.getVariable(CONFIG_KEY, OUTPUT_BUCKET_CONFIG_KEY)
+    .then(outputBucketName => {
+      console.log(outputBucketName)
+      const outputBucket = storage.bucket(outputBucketName)
+      const outputFile = outputBucket.file(`random_${(new Date()).toISOString()}`)
+      const outputStream = outputFile.createWriteStream()
+      const bufferStream = new stream.PassThrough()
+      bufferStream.end(data)
+
+      return streamToPromise(bufferStream.pipe(outputStream))
+    })
+}
 
 exports.http = (request, response) => {
-  const t = process.hrtime()
+  const responseBuilder = new ResponseBuilder()
 
-  exec('bin/hello', function (execErr, stdout, stderr) {
-    const t2 = process.hrtime(t)
-
-    runtimeConfig.getVariable('dev-config', 'FILES_BUCKET_NAME')
-      .then((inputBucketName) => {
-        console.log(inputBucketName)
-        const inputBucket = storage.bucket(inputBucketName)
-        const inputFile = inputBucket.file(`${request.body.fileSize}.dat`)
-
-        inputFile.download((err, data) => {
-          const t3 = process.hrtime(t2)
-
-          if (err) {
-            const res = ({
-              ts: (new Date()).toString(),
-              exec: {stdout: stdout, stderr: stderr, error: execErr},
-              download: {error: err},
-              time: {
-                exec: [t2[0], t2[1]],
-                download: [t3[0], t3[1]]
-              }
-            })
-
-            response.status(200).json(res)
-          } else {
-            runtimeConfig.getVariable('dev-config', 'BUCKET_NAME')
-              .then((outputBucketName) => {
-                console.log(outputBucketName)
-                const outputBucket = storage.bucket(outputBucketName)
-                const outputStream = outputBucket.file(`random_${(new Date()).toISOString()}`).createWriteStream()
-                const bufferStream = new stream.PassThrough()
-                bufferStream.end(data)
-
-                bufferStream.pipe(outputStream)
-                  .on('error', function (err) {
-                    const res = ({
-                      ts: (new Date()).toString(),
-                      exec: {stdout: stdout, stderr: stderr, error: execErr},
-                      download: {},
-                      upload: {error: err},
-                      time: {
-                        exec: [t2[0], t2[1]],
-                        download: [t3[0], t3[1]]
-                      }
-                    })
-
-                    response.status(200).json(res)
-                  })
-                  .on('finish', function () {
-                    const t4 = process.hrtime(t3)
-
-                    const res = ({
-                      ts: (new Date()).toString(),
-                      exec: {stdout: stdout, stderr: stderr, error: execErr},
-                      download: {},
-                      upload: {},
-                      time: {
-                        exec: [t2[0], t2[1]],
-                        download: [t3[0], t3[1]],
-                        upload: [t4[0], t4[1]]
-                      }
-                    })
-
-                    response.status(200).json(res)
-                  })
-              })
-          }
-        })
-      })
-  })
+  responseBuilder.exec(execToPromise('bin/hello'))
+    .then(() => {
+      return responseBuilder.download(downloadRequest(request.body.fileName))
+    })
+    .then((data) => {
+      return responseBuilder.upload(uploadRequest(data))
+    })
+    .then(() => {
+      response.status(200).json(responseBuilder.toJSON())
+    })
+    .catch(() => {
+      response.status(200).json(responseBuilder.toJSON())
+    })
 }
 
 exports.hello_128 = exports.http
