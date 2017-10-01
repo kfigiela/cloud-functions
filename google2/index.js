@@ -11,6 +11,8 @@ const INPUT_BUCKET_CONFIG_KEY = 'FILES_BUCKET_NAME'
 const OUTPUT_BUCKET_CONFIG_KEY = 'BUCKET_NAME'
 
 function downloadRequest(fileName) {
+  console.log(`Downloading from gs://${fileName}`)
+
   return runtimeConfig.getVariable(CONFIG_KEY, INPUT_BUCKET_CONFIG_KEY)
     .then(inputBucketName => {
       const inputBucket = storage.bucket(inputBucketName)
@@ -24,11 +26,13 @@ function downloadRequest(fileName) {
 }
 
 function uploadRequest(data) {
+  const fileName = `random_${(new Date()).toISOString()}`
+  console.log(`Uploading to gs://${fileName}`)
+
   return runtimeConfig.getVariable(CONFIG_KEY, OUTPUT_BUCKET_CONFIG_KEY)
     .then(outputBucketName => {
-      console.log(outputBucketName)
       const outputBucket = storage.bucket(outputBucketName)
-      const outputFile = outputBucket.file(`random_${(new Date()).toISOString()}`)
+      const outputFile = outputBucket.file(fileName)
       const outputStream = outputFile.createWriteStream()
       const bufferStream = new stream.PassThrough()
       bufferStream.end(data)
