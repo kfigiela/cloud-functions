@@ -1,54 +1,52 @@
-const exec = require('child_process').exec
-const bluebird = require('bluebird')
-const azure = bluebird.promisifyAll(require('azure-storage'))
+const Promise = require('bluebird')
+const azure = Promise.promisifyAll(require('azure-storage'))
+const ResponseBuilder = require('cloud-functions-common').ResponseBuilder
+const execToPromise = require('cloud-functions-common').execToPromise
 
-const TASK_CONTAINER = 'serverlessrandom'
+const STORAGE_ACCOUNT = process.env.AZURE_STORAGE_ACCOUNT
+const STORAGE_ACCESS_KEY = process.env.AZURE_STORAGE_ACCESS_KEY
+const OUTPUT_CONTAINER = process.env.AZURE_STORAGE_CONTAINER
+const INPUT_CONTAINER = process.env.AZURE_STORAGE_FILE_CONTAINER
+
+const blobService = azure.createBlobService(STORAGE_ACCOUNT, STORAGE_ACCESS_KEY)
 
 function fileName() {
   return `/random_${(new Date()).toISOString()}.txt`
 }
-module.exports.hello = function (context, req) {
-  const t = process.hrtime()
 
-  exec(__dirname + '\\hello.exe', function (error, stdout, stderr) {
-    const t2 = process.hrtime(t)
-    const execError = error
+function downloadRequest(fileName) {
+  if (!fileName) return Promise.reject('Missing fileName in event data!')
+  return blobService.getBlobToTextAsync(INPUT_CONTAINER, fileName)
+}
 
-    const storageAccount = process.env.AZURE_STORAGE_ACCOUNT
-    const storageAccessKey = process.env.AZURE_STORAGE_ACCESS_KEY
-
-    const blobService = azure.createBlobService(storageAccount, storageAccessKey)
-    blobService.createContainerIfNotExistsAsync(TASK_CONTAINER, {
-      publicAccessLevel: 'blob'
-    })
-      .then(() =>
-        blobService.createBlockBlobFromTextAsync(TASK_CONTAINER, fileName(), stdout)
-      )
-      .then(() => {
-        const t3 = process.hrtime(t2)
-
-        context.res = {
-          ts: (new Date()).toString(),
-          exec: {'stdout': stdout, 'stderr': stderr, 'error': execError},
-          time: {
-            exec: [t2[0], t2[1]],
-            upload: [t3[0], t3[1]]
-          }
-        }
-        context.done()
-      })
-      .catch(error => {
-        context.res = {
-          ts: (new Date()).toString(),
-          exec: {'stdout': stdout, 'stderr': stderr, 'error': execError},
-          upload: {'error': error},
-          time: {
-            exec: [t2[0], t2[1]]
-          }
-        }
-        context.done()
-      })
+function uploadRequest(data) {
+  if (!data) return Promise.reject('No data to upload!')
+  return blobService.createContainerIfNotExistsAsync(OUTPUT_CONTAINER, {
+    publicAccessLevel: 'blob'
   })
+    .then(() =>
+      blobService.createBlockBlobFromTextAsync(OUTPUT_CONTAINER, fileName(), stdout)
+    )
+}
+
+module.exports.hello = function (context, req) {
+  const responseBuilder = new ResponseBuilder()
+
+  responseBuilder.exec(execToPromise(__dirname + '\\hello.exe'))
+    .then(() => {
+      return responseBuilder.download(downloadRequest(req.body.fileName))
+    })
+    .then((data) => {
+      return responseBuilder.upload(uploadRequest(data))
+    })
+    .then(() => {
+      context.res = responseBuilder.toJSON()
+      context.done()
+    })
+    .catch(() => {
+      context.res = responseBuilder.toJSON()
+      context.done()
+    })
 }
 
 

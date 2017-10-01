@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "azure-storage": "^2.2.1",
-    "bluebird": "^3.5.0"
+    "bluebird": "^3.5.0",
+    "cloud-functions-common": "file:../lib"
   }
 }
