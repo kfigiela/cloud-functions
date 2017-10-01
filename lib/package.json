@@ -1,0 +1,11 @@
+{
+  "name": "cloud-functions-common",
+  "version": "1.0.0",
+  "description": "Common utilities for cloud-functions repo",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "quirk0o <beata@obrok.eu>",
+  "license": "MIT"
+}
