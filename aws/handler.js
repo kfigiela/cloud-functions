@@ -28,7 +28,7 @@ exports.hello = (event, context, callback) => {
 
   responseBuilder.exec(execToPromise('hello'))
     .then(() => {
-      return responseBuilder.download(downloadRequest(event.fileName))
+      return responseBuilder.download(downloadRequest(event.fileName), response => response.Body)
     })
     .then((data) => {
       return responseBuilder.upload(uploadRequest(data))
