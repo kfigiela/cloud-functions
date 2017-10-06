@@ -20,7 +20,7 @@ function downloadRequest(fileName) {
 
       return inputFile.download()
         .then(data => {
-          return {data, size: `${data.length}kB`}
+          return {data: data[0], size: data[0].length}
         })
     })
 }
@@ -28,6 +28,7 @@ function downloadRequest(fileName) {
 function uploadRequest(data) {
   const fileName = `random_${(new Date()).toISOString()}`
   console.log(`Uploading to gs://${fileName}`)
+  console.log('Data: ' + JSON.stringify(data))
 
   return runtimeConfig.getVariable(CONFIG_KEY, OUTPUT_BUCKET_CONFIG_KEY)
     .then(outputBucketName => {
