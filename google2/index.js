@@ -19,7 +19,7 @@ function downloadRequest(fileName) {
 
       return inputFile.download()
         .then(data => {
-          return {data: data[0], size: data[0].length}
+          return data[0]
         })
     })
 }
