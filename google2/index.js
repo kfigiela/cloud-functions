@@ -4,7 +4,6 @@ const stream = require('stream')
 const Promise = require('bluebird')
 const ResponseBuilder = require('cloud-functions-common').ResponseBuilder
 const streamToPromise = require('cloud-functions-common').streamToPromise
-const execToPromise = require('cloud-functions-common').execToPromise
 
 const CONFIG_KEY = 'dev-config'
 const INPUT_BUCKET_CONFIG_KEY = 'FILES_BUCKET_NAME'
@@ -45,10 +44,7 @@ function uploadRequest(data) {
 exports.http = (request, response) => {
   const responseBuilder = new ResponseBuilder()
 
-  responseBuilder.exec(execToPromise('bin/hello'))
-    .then(() => {
-      return responseBuilder.download(downloadRequest(request.body.fileName))
-    })
+  responseBuilder.download(downloadRequest(request.body.fileName))
     .then((data) => {
       return responseBuilder.upload(uploadRequest(data))
     })
