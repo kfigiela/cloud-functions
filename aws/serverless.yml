@@ -58,7 +58,7 @@ functions:
     events:
       - http:
           path: hello-128
-          method: get
+          method: post
   hello-256:
     handler: handler.hello
     memorySize: 256
@@ -67,7 +67,7 @@ functions:
     events:
       - http:
           path: hello-256
-          method: get
+          method: post
   hello-512:
     handler: handler.hello
     memorySize: 512
@@ -76,7 +76,7 @@ functions:
     events:
       - http:
           path: hello-512
-          method: get
+          method: post
   hello-1024:
     handler: handler.hello
     memorySize: 1024
@@ -85,7 +85,7 @@ functions:
     events:
       - http:
           path: hello-1024
-          method: get
+          method: post
   hello-1536:
     handler: handler.hello
     memorySize: 1536
@@ -94,7 +94,7 @@ functions:
     events:
       - http:
           path: hello-1536
-          method: get
+          method: post
 
 resources:
   Resources:

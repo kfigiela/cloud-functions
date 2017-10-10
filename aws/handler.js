@@ -2,7 +2,6 @@ const Promise = require('bluebird')
 const AWS = require('aws-sdk')
 const s3 = Promise.promisifyAll(new AWS.S3())
 const ResponseBuilder = require('cloud-functions-common').ResponseBuilder
-const execToPromise = require('cloud-functions-common').execToPromise
 
 process.env['PATH'] = process.env['PATH'] + ':' + process.env['LAMBDA_TASK_ROOT'] + '/bin'
 const OUTPUT_BUCKET = process.env.BUCKET_NAME
@@ -19,17 +18,16 @@ function uploadRequest(data) {
   const fileName = `random_${(new Date()).toISOString()}`
 
   console.log(`Uploading to s3://${OUTPUT_BUCKET}/${fileName}`)
+  console.log(`Data: ${JSON.stringify(data)}`)
 
   if (!data) return Promise.reject('No data to upload!')
   return s3.putObjectAsync({Bucket: OUTPUT_BUCKET, Key: fileName, Body: data})
 }
 exports.hello = (event, context, callback) => {
   const responseBuilder = new ResponseBuilder()
+  const body = JSON.parse(event.body)
 
-  responseBuilder.exec(execToPromise('hello'))
-    .then(() => {
-      return responseBuilder.download(downloadRequest(event.fileName), response => response.Body)
-    })
+  responseBuilder.download(downloadRequest(body.fileName), response => response.Body)
     .then((data) => {
       return responseBuilder.upload(uploadRequest(data))
     })
