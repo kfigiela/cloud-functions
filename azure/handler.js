@@ -1,43 +1,40 @@
 const Promise = require('bluebird')
 const azure = Promise.promisifyAll(require('azure-storage'))
 const ResponseBuilder = require('cloud-functions-common').ResponseBuilder
-const execToPromise = require('cloud-functions-common').execToPromise
 
-const STORAGE_ACCOUNT = process.env.AZURE_STORAGE_ACCOUNT
-const STORAGE_ACCESS_KEY = process.env.AZURE_STORAGE_ACCESS_KEY
+const STORAGE_CONNECTION_STRING = process.env.AZURE_STORAGE_CONNECTION_STRING
 const OUTPUT_CONTAINER = process.env.AZURE_STORAGE_CONTAINER
 const INPUT_CONTAINER = process.env.AZURE_STORAGE_FILE_CONTAINER
 
-const blobService = azure.createBlobService(STORAGE_ACCOUNT, STORAGE_ACCESS_KEY)
+const blobService = azure.createBlobService(STORAGE_CONNECTION_STRING)
 
-function fileName() {
-  return `/random_${(new Date()).toISOString()}.txt`
-}
+function downloadRequest(context, fileName) {
+  context.log(`Downloading from azs://${INPUT_CONTAINER}/${fileName}`)
 
-function downloadRequest(fileName) {
   if (!fileName) return Promise.reject('Missing fileName in event data!')
   return blobService.getBlobToTextAsync(INPUT_CONTAINER, fileName)
 }
 
-function uploadRequest(data) {
+function uploadRequest(context, data) {
+  const fileName = `/random_${(new Date()).toISOString()}`
+
+  context.log(`Uploading to azs://${OUTPUT_CONTAINER}/${fileName}`)
+
   if (!data) return Promise.reject('No data to upload!')
   return blobService.createContainerIfNotExistsAsync(OUTPUT_CONTAINER, {
     publicAccessLevel: 'blob'
   })
     .then(() =>
-      blobService.createBlockBlobFromTextAsync(OUTPUT_CONTAINER, fileName(), stdout)
+      blobService.createBlockBlobFromTextAsync(OUTPUT_CONTAINER, fileName, data)
     )
 }
 
 module.exports.hello = function (context, req) {
   const responseBuilder = new ResponseBuilder()
 
-  responseBuilder.exec(execToPromise(__dirname + '\\hello.exe'))
-    .then(() => {
-      return responseBuilder.download(downloadRequest(req.body.fileName))
-    })
+  responseBuilder.download(downloadRequest(context, req.body.fileName))
     .then((data) => {
-      return responseBuilder.upload(uploadRequest(data))
+      return responseBuilder.upload(uploadRequest(context, data))
     })
     .then(() => {
       context.res = responseBuilder.toJSON()
