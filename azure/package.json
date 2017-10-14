@@ -13,6 +13,6 @@
   "dependencies": {
     "azure-storage": "^2.2.1",
     "bluebird": "^3.5.0",
-    "cloud-functions-common": "git+https://github.com/quirk0o/cloud-functions-common.git#v2.0.1"
+    "cloud-functions-common": "git+https://github.com/quirk0o/cloud-functions-common.git#v2.0.4"
   }
 }
