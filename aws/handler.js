@@ -18,7 +18,6 @@ function uploadRequest(data) {
   const fileName = `random_${(new Date()).toISOString()}`
 
   console.log(`Uploading to s3://${OUTPUT_BUCKET}/${fileName}`)
-  console.log(`Data: ${JSON.stringify(data)}`)
 
   if (!data) return Promise.reject('No data to upload!')
   return s3.putObjectAsync({Bucket: OUTPUT_BUCKET, Key: fileName, Body: data})
