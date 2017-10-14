@@ -1,0 +1,15 @@
+#!/bin/bash
+ 
+container_name=${AZURE_STORAGE_CONTAINER}
+source_folder='../files/*'
+ 
+for f in $source_folder
+do
+  echo "Uploading $f file..."
+  az storage blob upload --file $f --container-name $container_name --name $(basename $f)
+done
+ 
+echo "List all blobs in container..."
+azure storage blob list $container_name
+ 
+echo "Completed"
