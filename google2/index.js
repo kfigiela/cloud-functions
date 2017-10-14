@@ -27,7 +27,6 @@ function downloadRequest(fileName) {
 function uploadRequest(data) {
   const fileName = `random_${(new Date()).toISOString()}`
   console.log(`Uploading to gs://${fileName}`)
-  console.log('Data: ' + JSON.stringify(data))
 
   return runtimeConfig.getVariable(CONFIG_KEY, OUTPUT_BUCKET_CONFIG_KEY)
     .then(outputBucketName => {
