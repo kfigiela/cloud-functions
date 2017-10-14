@@ -1,75 +1,64 @@
-# Welcome to Serverless!
-#
-# This file is the main config file for your service.
-# It's very minimal at this point and uses default values.
-# You can always add more config options for more control.
-# We've included some commented out config examples here.
-# Just uncomment any of them to get that config option.
-#
-# For full config options, check the docs:
-#    docs.serverless.com
-#
-# Happy Coding!
-
 service: ${env:AWS_SERVICE_NAME}
-
-# You can pin your service to only deploy with a specific Serverless version
-# Check out our docs for more details
-# frameworkVersion: "=X.X.X"
 
 provider:
   name: aws
   runtime: nodejs6.10
 
-# you can overwrite defaults here
   stage: dev
   region: eu-west-1
   timeout: 240
 
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "s3:ListBucket"
+      Resource:
+        Fn::Join:
+          - ""
+          - - "arn:aws:s3:::"
+            - { "Ref" : "RandomBucket" }
+    - Effect: "Allow"
+      Action:
+        - "s3:ListBucket"
+      Resource:
+        Fn::Join:
+          - ""
+          - - "arn:aws:s3:::"
+            - ${env:S3_FILES_BUCKET_NAME}
+    - Effect: "Allow"
+      Action:
+        - "s3:PutObject"
+        - "s3:GetObject"
+      Resource:
+        Fn::Join:
+          - ""
+          - - "arn:aws:s3:::"
+            - "Ref" : "RandomBucket"
+            - "/*"
+    - Effect: "Allow"
+      Action:
+        - "s3:GetObject"
+      Resource:
+        Fn::Join:
+          - ""
+          - - "arn:aws:s3:::"
+            - ${env:S3_FILES_BUCKET_NAME}
+            - "/*"
+
   environment:
-    INFLUX_ENDPOINT: ${env:INFLUX_ENDPOINT}
-    INFLUX_USER:     ${env:INFLUX_USER}
-    INFLUX_PASSWORD: ${env:INFLUX_PASSWORD}
-
-# you can add statements to the Lambda function's IAM Role here
-#  iamRoleStatements:
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:ListBucket"
-#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:PutObject"
-#      Resource:
-#        Fn::Join:
-#          - ""
-#          - - "arn:aws:s3:::"
-#            - "Ref" : "ServerlessDeploymentBucket"
-#            - "/*"
-
-# you can define service wide environment variables here
-#  environment:
-#    variable1: value1
-
-# you can add packaging information here
-#package:
-#  include:
-#    - include-me.js
-#    - include-me-dir/**
-#  exclude:
-#    - exclude-me.js
-#    - exclude-me-dir/**
+    BUCKET_NAME: { "Ref" : "RandomBucket" }
+    FILES_BUCKET_NAME: ${env:S3_FILES_BUCKET_NAME}
 
 functions:
   hello-128:
-    handler: handler.hello128
+    handler: handler.hello
     memorySize: 128
     environment:
       MEMORY: 128
     events:
       - http:
           path: hello-128
-          method: get
+          method: post
   hello-256:
     handler: handler.hello
     memorySize: 256
@@ -78,7 +67,7 @@ functions:
     events:
       - http:
           path: hello-256
-          method: get
+          method: post
   hello-512:
     handler: handler.hello
     memorySize: 512
@@ -87,7 +76,7 @@ functions:
     events:
       - http:
           path: hello-512
-          method: get
+          method: post
   hello-1024:
     handler: handler.hello
     memorySize: 1024
@@ -96,7 +85,7 @@ functions:
     events:
       - http:
           path: hello-1024
-          method: get
+          method: post
   hello-1536:
     handler: handler.hello
     memorySize: 1536
@@ -105,36 +94,12 @@ functions:
     events:
       - http:
           path: hello-1536
-          method: get
-#      - s3: ${env:BUCKET}
-#      - schedule: rate(10 minutes)
-#      - sns: greeter-topic
-#      - stream: arn:aws:dynamodb:region:XXXXXX:table/foo/stream/1970-01-01T00:00:00.000
-#      - alexaSkill
-#      - iot:
-#          sql: "SELECT * FROM 'some_topic'"
-#      - cloudwatchEvent:
-#          event:
-#            source:
-#              - "aws.ec2"
-#            detail-type:
-#              - "EC2 Instance State-change Notification"
-#            detail:
-#              state:
-#                - pending
+          method: post
 
-#    Define function environment variables here
-#    environment:
-#      variable2: value2
-
-# you can add CloudFormation resource templates here
-#resources:
-#  Resources:
-#    NewResource:
-#      Type: AWS::S3::Bucket
-#      Properties:
-#        BucketName: my-new-bucket
-#  Outputs:
-#     NewOutput:
-#       Description: "Description for the output"
-#       Value: "Some output value"
+resources:
+  Resources:
+    RandomBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${env:S3_BUCKET_NAME}
+        AccessControl: BucketOwnerFullControl

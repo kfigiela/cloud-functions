@@ -4,7 +4,9 @@
   "description": "",
   "main": "handler.js",
   "dependencies": {
-    "request": "^2.81.0"
+    "aws-sdk": "^2.82.0",
+    "bluebird": "^3.5.0",
+    "cloud-functions-common": "git+https://github.com/quirk0o/cloud-functions-common.git#v2.0.4"
   },
   "devDependencies": {},
   "scripts": {
