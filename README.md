@@ -1,3 +1,3 @@
 # cloud-functions
 
-The source for bencharks http://cloud-functions.icsr.agh.edu.pl/
+The source for benchmarks http://cloud-functions.icsr.agh.edu.pl/
