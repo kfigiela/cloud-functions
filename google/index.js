@@ -1,12 +1,11 @@
 const runtimeConfig = require('cloud-functions-runtime-config')
 const storage = require('@google-cloud/storage')()
 const stream = require('stream')
-const Promise = require('bluebird')
 const ResponseBuilder = require('cloud-functions-common').ResponseBuilder
 const streamToPromise = require('cloud-functions-common').streamToPromise
 
-const CONFIG_KEY = 'dev-config'
-const INPUT_BUCKET_CONFIG_KEY = 'FILES_BUCKET_NAME'
+const CONFIG_KEY = `serverless-research-config`
+const INPUT_BUCKET_CONFIG_KEY = 'INPUT_BUCKET_NAME'
 const OUTPUT_BUCKET_CONFIG_KEY = 'BUCKET_NAME'
 
 function downloadRequest(fileName) {
