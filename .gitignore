@@ -1,3 +1,6 @@
+sample_files
+**/.env
+.idea
 lib/
 
 # Logs
