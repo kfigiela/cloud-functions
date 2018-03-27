@@ -40,7 +40,7 @@ function uploadRequest(data) {
     })
 }
 
-exports.http = (request, response) => {
+exports.transfer = (request, response) => {
   const responseBuilder = new ResponseBuilder()
 
   responseBuilder.download(downloadRequest(request.body.fileName))
@@ -55,8 +55,8 @@ exports.http = (request, response) => {
     })
 }
 
-exports.hello_128 = exports.http
-exports.hello_256 = exports.http
-exports.hello_512 = exports.http
-exports.hello_1024 = exports.http
-exports.hello_2048 = exports.http
+exports.transfer_128 = exports.transfer
+exports.transfer_256 = exports.transfer
+exports.transfer_512 = exports.transfer
+exports.transfer_1024 = exports.transfer
+exports.transfer_2048 = exports.transfer

@@ -17,28 +17,28 @@ package:
     - .git/**
 
 functions:
-  hello_128:
-    handler: hello_128
+  transfer_128:
+    handler: transfer_128
     memorySize: 128
     events:
       - http: path
-  hello_256:
-    handler: hello_256
+  transfer_256:
+    handler: transfer_256
     memorySize: 256
     events:
       - http: path
-  hello_512:
-    handler: hello_512
+  transfer_512:
+    handler: transfer_512
     memorySize: 512
     events:
       - http: path
-  hello_1024:
-    handler: hello_1024
+  transfer_1024:
+    handler: transfer_1024
     memorySize: 1024
     events:
       - http: path
-  hello_2048:
-    handler: hello_2048
+  transfer_2048:
+    handler: transfer_2048
     memorySize: 2048
     events:
       - http: path
