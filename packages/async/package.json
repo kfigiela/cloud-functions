@@ -1,6 +1,6 @@
 {
   "name": "@quirk0.o/async",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Promise flow helpers for cloud-functions packages",
   "main": "index.js",
   "repository": "https://github.com/quirk0o/cloud-functions",
