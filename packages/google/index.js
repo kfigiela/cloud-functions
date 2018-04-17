@@ -2,7 +2,9 @@ const runtimeConfig = require('cloud-functions-runtime-config')
 const storage = require('@google-cloud/storage')()
 const fs = require('fs')
 const stream = require('stream')
-const streamToPromise = require('cloud-functions-common').streamToPromise
+const streamToPromise = require('@quirk0.o/cloud-functions-common').streamToPromise
+const Benchmark = require('@quirk0.o/benchmark')
+const {logP} = require('@quirk0.o/async')
 const env = require('./environment')
 
 const CONFIG_KEY = `serverless-research-config`
