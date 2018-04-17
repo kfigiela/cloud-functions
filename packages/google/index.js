@@ -11,17 +11,6 @@ const OUTPUT_BUCKET_CONFIG_KEY = 'buckets/output'
 
 const config = (key) => () => runtimeConfig.getVariable(CONFIG_KEY, key)
 
-const tapP = (fn) => (value) => {
-  fn(value)
-  return value
-}
-const tapError = (fn) => (value) => {
-  fn(value)
-  return Promise.reject(value)
-}
-const logP = (fn) => tapP((value) => console.log(fn(value)))
-const pipeP = (...fns) => fns.reduce((prev, curr) => prev.then(curr), Promise.resolve())
-
 const timestampedFileName = () => `random_${(new Date()).toISOString()}`
 const file = (bucket, fileName) => storage.bucket(bucket).file(fileName)
 const readFile = (bucket, fileName) => {
