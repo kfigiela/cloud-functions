@@ -1,6 +1,6 @@
 {
   "name": "@quirk0.o/benchmark",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Simple time measurement for promise-based tasks",
   "main": "index.js",
   "repository": "https://github.com/quirk0o/cloud-functions",
