@@ -1,4 +1,4 @@
-service: ${env:AWS_SERVICE_NAME}
+service: serverless-research-transfer
 
 provider:
   name: aws
@@ -24,7 +24,7 @@ provider:
         Fn::Join:
           - ""
           - - "arn:aws:s3:::"
-            - ${env:S3_FILES_BUCKET_NAME}
+            - ${self:custom.${self:custom.stage}.inputBucket}
     - Effect: "Allow"
       Action:
         - "s3:PutObject"
@@ -42,58 +42,63 @@ provider:
         Fn::Join:
           - ""
           - - "arn:aws:s3:::"
-            - ${env:S3_FILES_BUCKET_NAME}
+            - ${self:custom.${self:custom.stage}.inputBucket}
             - "/*"
 
   environment:
-    BUCKET_NAME: { "Ref" : "RandomBucket" }
-    FILES_BUCKET_NAME: ${env:S3_FILES_BUCKET_NAME}
+    OUTPUT_BUCKET_NAME: { "Ref" : "RandomBucket" }
+    INPUT_BUCKET_NAME: ${self:custom.${self:custom.stage}.inputBucket}
+
+custom:
+  stage: ${opt:stage, self:provider.stage}
+  dev: ${file(./environment/dev.yml)}
+  prod: ${file(./environment/prod.yml)}
 
 functions:
-  hello-128:
-    handler: handler.hello128
+  transfer-128:
+    handler: handler.transfer
     memorySize: 128
     environment:
       MEMORY: 128
     events:
       - http:
-          path: hello-128
+          path: transfer-128
           method: post
-  hello-256:
-    handler: handler.hello
+  transfer-256:
+    handler: handler.transfer
     memorySize: 256
     environment:
       MEMORY: 256
     events:
       - http:
-          path: hello-256
+          path: transfer-256
           method: post
-  hello-512:
-    handler: handler.hello
+  transfer-512:
+    handler: handler.transfer
     memorySize: 512
     environment:
       MEMORY: 512
     events:
       - http:
-          path: hello-512
+          path: transfer-512
           method: post
-  hello-1024:
-    handler: handler.hello
+  transfer-1024:
+    handler: handler.transfer
     memorySize: 1024
     environment:
       MEMORY: 1024
     events:
       - http:
-          path: hello-1024
+          path: transfer-1024
           method: post
-  hello-1536:
-    handler: handler.hello
+  transfer-1536:
+    handler: handler.transfer
     memorySize: 1536
     environment:
       MEMORY: 1536
     events:
       - http:
-          path: hello-1536
+          path: transfer-1536
           method: post
 
 resources:
@@ -101,5 +106,5 @@ resources:
     RandomBucket:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: ${env:S3_BUCKET_NAME}
+        BucketName: ${self:custom.${self:custom.stage}.bucket}
         AccessControl: BucketOwnerFullControl

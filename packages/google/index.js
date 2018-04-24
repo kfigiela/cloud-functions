@@ -13,7 +13,7 @@ const OUTPUT_BUCKET_CONFIG_KEY = 'buckets/output'
 
 const config = (key) => () => runtimeConfig.getVariable(CONFIG_KEY, key)
 
-const timestampedFileName = () => `random_${(new Date()).toISOString()}`
+const timestampedFileName = () => `transfer_${(new Date()).toISOString()}`
 const file = (bucket, fileName) => storage.bucket(bucket).file(fileName)
 const readFile = (bucket, fileName) => {
   const fileStream = file(bucket, fileName).createReadStream()
@@ -47,11 +47,16 @@ exports.transfer = (request, response) => {
   new Benchmark()
     .do('download')(
       config(INPUT_BUCKET_CONFIG_KEY),
-      (bucket) => readFile(bucket, inputFileName)
+      logP(bucket => `Downloading gs://${bucket}/${inputFileName}`),
+      (bucket) => readFile(bucket, inputFileName),
+      logP(() => `Finished downloading`)
     )
     .do('upload')(
       config(OUTPUT_BUCKET_CONFIG_KEY),
-      (bucket) => writeFile(bucket, timestampedFileName())
+      (bucket) => [bucket, timestampedFileName()],
+      logP(([bucket, fileName]) => `Uploading to gs://${bucket}/${fileName}`),
+      ([bucket, fileName]) => writeFile(bucket, fileName),
+      logP(() => `Finished uploading`)
     )
     .json()
     .then(logP(json => `Finished: ${JSON.stringify(json)}`))

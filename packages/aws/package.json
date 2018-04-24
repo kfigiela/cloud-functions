@@ -5,6 +5,8 @@
   "private": true,
   "main": "handler.js",
   "dependencies": {
+    "@quirk0.o/async": "^1.0.1",
+    "@quirk0.o/benchmark": "^1.0.1",
     "@quirk0.o/cloud-functions-common": "2.0.4",
     "aws-sdk": "^2.82.0",
     "bluebird": "^3.5.0"

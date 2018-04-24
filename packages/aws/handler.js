@@ -1,73 +1,66 @@
-const Promise = require('bluebird')
+const fs = require('fs')
+const stream = require('stream')
 const AWS = require('aws-sdk')
-const s3 = Promise.promisifyAll(new AWS.S3())
-const ResponseBuilder = require('@quirk0.o/cloud-functions-common').ResponseBuilder
+const bluebird = require('bluebird')
+const s3 = new AWS.S3()
+const putObjectStream = bluebird.promisify(s3.upload).bind(s3)
+const {streamToPromise} = require('@quirk0.o/cloud-functions-common')
+const Benchmark = require('@quirk0.o/benchmark')
+const {logP} = require('@quirk0.o/async')
 
-process.env['PATH'] = process.env['PATH'] + ':' + process.env['LAMBDA_TASK_ROOT'] + '/bin'
-const OUTPUT_BUCKET = process.env.BUCKET_NAME
-const INPUT_BUCKET = process.env.FILES_BUCKET_NAME
+const OUTPUT_BUCKET = process.env.OUTPUT_BUCKET_NAME
+const INPUT_BUCKET = process.env.INPUT_BUCKET_NAME
 
-function downloadRequest(fileName, options) {
-  console.log(`Downloading s3://${INPUT_BUCKET}/${fileName}`)
+const timestampedFileName = () => `transfer_${(new Date()).toISOString()}`
+const file = (bucket, fileName, options) => Object.assign({Bucket: bucket, Key: fileName}, options)
+const readFile = (bucket, fileName) => {
+  try {
+    const fileStream = s3.getObject(file(bucket, fileName)).createReadStream()
+    const writer = fs.createWriteStream('/tmp/input.dat')
 
-  if (!fileName) return Promise.reject('Missing fileName in event data!')
-  return s3.getObjectAsync(Object.assign({Bucket: INPUT_BUCKET, Key: fileName}, options))
-}
-
-function uploadRequest(data) {
-  const fileName = `random_${(new Date()).toISOString()}`
-
-  console.log(`Uploading to s3://${OUTPUT_BUCKET}/${fileName}`)
-
-  if (!data) return Promise.reject('No data to upload!')
-  return s3.putObjectAsync({Bucket: OUTPUT_BUCKET, Key: fileName, Body: data})
-}
-
-exports.hello = (event, context, callback) => {
-  const responseBuilder = new ResponseBuilder()
-  const body = JSON.parse(event.body)
-
-  responseBuilder.download(downloadRequest(body.fileName), response => response.Body)
-    .then((data) => {
-      return responseBuilder.upload(uploadRequest(data))
-    })
-    .then(() => {
-      callback(null, {statusCode: 200, body: JSON.stringify(responseBuilder.toJSON())})
-    })
-    .catch(() => {
-      callback(null, {statusCode: 200, body: JSON.stringify(responseBuilder.toJSON())})
-    })
-}
-
-exports.hello128 = (event, context, callback) => {
-  const responseBuilder = new ResponseBuilder()
-  const body = JSON.parse(event.body)
-  const fileName = body.fileName
-  const contentLength = body.contentLength
-
-  if (!fileName) {
-    callback(null, {statusCode: 200, body: 'Missing fileName in event data'})
+    return streamToPromise(fileStream.pipe(writer))
+  } catch (e) {
+    return Promise.reject(e)
   }
-  if (!contentLength) {
-    callback(null, {statusCode: 200, body: 'Missing contentLength in event data'})
-  }
+}
 
-  console.log(`Downloading s3://${INPUT_BUCKET}/${fileName}`)
+const writeFile = (bucket, fileName) => {
+  const generator = new stream.Readable()
+  const size = 64 * 1024
+  const chunkSize = 16384
+  let i = 1
 
-  const inputStream = s3.getObject({Bucket: INPUT_BUCKET, Key: fileName}).createReadStream()
-  s3.putObject({
-    Bucket: OUTPUT_BUCKET,
-    Key: `random_${(new Date()).toISOString()}`,
-    Body: inputStream,
-    ContentLength: contentLength
-  }, (err, data) => {
-    if (err) {
-      responseBuilder._registerResponse(responseBuilder._formatStorageResponse(err), 'upload')
-      callback(null, {statusCode: 200, body: JSON.stringify(responseBuilder.toJSON())})
+  generator._read = () => {
+    if (i > size) {
+      return generator.push(null)
     }
-    responseBuilder._registerResponse(undefined, 'download')
-    responseBuilder._response.upload = responseBuilder._response.download
-    responseBuilder._time.upload = responseBuilder._time.download
-    callback(null, {statusCode: 200, body: JSON.stringify(responseBuilder.toJSON())})
-  })
+    generator.push('\0'.repeat(chunkSize))
+    i += chunkSize
+  }
+
+  return putObjectStream(file(bucket, fileName, {
+    Body: generator
+  }))
+}
+const response = (json) => ({statusCode: 200, body: JSON.stringify(json)})
+
+exports.transfer = (event, context, callback) => {
+  const body = JSON.parse(event.body)
+  const inputFileName = body.fileName
+
+  new Benchmark()
+    .do('download')(
+      logP(() => `Downloading s3://${INPUT_BUCKET}/${inputFileName}`),
+      () => readFile(INPUT_BUCKET, inputFileName),
+      logP(() => `Finished downloading`)
+    )
+    .do('upload')(
+      timestampedFileName,
+      logP((fileName) => `Uploading to s3://${OUTPUT_BUCKET}/${fileName}`),
+      (fileName) => writeFile(OUTPUT_BUCKET, fileName),
+      logP(() => `Finished uploading`)
+    )
+    .json()
+    .then(logP(json => `Finished: ${JSON.stringify(json)}`))
+    .then(json => callback(null, response(json)))
 }

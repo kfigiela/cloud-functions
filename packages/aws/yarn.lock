@@ -2,6 +2,20 @@
 # yarn lockfile v1
 
 
+"@quirk0.o/async@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@quirk0.o/async/-/async-1.0.1.tgz#9e31590ba0c7af5100af86e73587fa2199639b76"
+
+"@quirk0.o/benchmark@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@quirk0.o/benchmark/-/benchmark-1.0.1.tgz#1f8d4ad72df3b70dcdacad123a3fc1f3da1e2692"
+  dependencies:
+    "@quirk0.o/async" "^1.0.1"
+
+"@quirk0.o/cloud-functions-common@2.0.4":
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/@quirk0.o/cloud-functions-common/-/cloud-functions-common-2.0.4.tgz#99a03da8f651ab86c34ba99b93abd28a3f149fae"
+
 aws-sdk@^2.82.0:
   version "2.133.0"
   resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.133.0.tgz#6a6d8988bd35928c11bbd3db677ad5b3eae7107a"
@@ -32,10 +46,6 @@ buffer@4.9.1:
     base64-js "^1.0.2"
     ieee754 "^1.1.4"
     isarray "^1.0.0"
-
-"cloud-functions-common@git+https://github.com/quirk0o/cloud-functions-common.git#v2.0.4":
-  version "2.0.4"
-  resolved "git+https://github.com/quirk0o/cloud-functions-common.git#764ea3098c3de6d9acfbdbc4856853a84fe6c924"
 
 crypto-browserify@1.0.9:
   version "1.0.9"
