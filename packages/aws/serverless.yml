@@ -1,0 +1,110 @@
+service: serverless-research-transfer
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+
+  stage: dev
+  region: eu-west-1
+  timeout: 240
+
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "s3:ListBucket"
+      Resource:
+        Fn::Join:
+          - ""
+          - - "arn:aws:s3:::"
+            - { "Ref" : "RandomBucket" }
+    - Effect: "Allow"
+      Action:
+        - "s3:ListBucket"
+      Resource:
+        Fn::Join:
+          - ""
+          - - "arn:aws:s3:::"
+            - ${self:custom.${self:custom.stage}.inputBucket}
+    - Effect: "Allow"
+      Action:
+        - "s3:PutObject"
+        - "s3:GetObject"
+      Resource:
+        Fn::Join:
+          - ""
+          - - "arn:aws:s3:::"
+            - "Ref" : "RandomBucket"
+            - "/*"
+    - Effect: "Allow"
+      Action:
+        - "s3:GetObject"
+      Resource:
+        Fn::Join:
+          - ""
+          - - "arn:aws:s3:::"
+            - ${self:custom.${self:custom.stage}.inputBucket}
+            - "/*"
+
+  environment:
+    OUTPUT_BUCKET_NAME: { "Ref" : "RandomBucket" }
+    INPUT_BUCKET_NAME: ${self:custom.${self:custom.stage}.inputBucket}
+
+custom:
+  stage: ${opt:stage, self:provider.stage}
+  dev: ${file(./environment/dev.yml)}
+  prod: ${file(./environment/prod.yml)}
+
+functions:
+  transfer-128:
+    handler: handler.transfer
+    memorySize: 128
+    environment:
+      MEMORY: 128
+    events:
+      - http:
+          path: transfer-128
+          method: post
+  transfer-256:
+    handler: handler.transfer
+    memorySize: 256
+    environment:
+      MEMORY: 256
+    events:
+      - http:
+          path: transfer-256
+          method: post
+  transfer-512:
+    handler: handler.transfer
+    memorySize: 512
+    environment:
+      MEMORY: 512
+    events:
+      - http:
+          path: transfer-512
+          method: post
+  transfer-1024:
+    handler: handler.transfer
+    memorySize: 1024
+    environment:
+      MEMORY: 1024
+    events:
+      - http:
+          path: transfer-1024
+          method: post
+  transfer-1536:
+    handler: handler.transfer
+    memorySize: 1536
+    environment:
+      MEMORY: 1536
+    events:
+      - http:
+          path: transfer-1536
+          method: post
+
+resources:
+  Resources:
+    RandomBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.${self:custom.stage}.bucket}
+        AccessControl: BucketOwnerFullControl

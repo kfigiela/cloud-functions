@@ -1,0 +1,16 @@
+{
+  "name": "@quirk0.o/benchmark",
+  "version": "1.0.1",
+  "description": "Simple time measurement for promise-based tasks",
+  "main": "index.js",
+  "repository": "https://github.com/quirk0o/cloud-functions",
+  "author": "quirk0o <beata@obrok.eu>",
+  "license": "MIT",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@quirk0.o/async": "^1.0.1"
+  }
+}

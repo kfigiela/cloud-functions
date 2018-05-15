@@ -1,0 +1,2 @@
+service: serverless-research-gcf-dev-transfer
+suffix: '-dev'

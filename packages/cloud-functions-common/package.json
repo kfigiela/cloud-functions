@@ -1,0 +1,14 @@
+{
+  "name": "@quirk0.o/cloud-functions-common",
+  "version": "2.0.6",
+  "description": "Common utilities for cloud-functions repo",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "quirk0o <beata@obrok.eu>",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}

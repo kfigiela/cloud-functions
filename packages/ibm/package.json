@@ -1,0 +1,14 @@
+{
+  "name": "@quirk0.o/serverless-research-ibm",
+  "version": "1.0.1",
+  "description": "Sample OpenWhisk NodeJS serverless framework service.",
+  "private": true,
+  "main": "handler.js",
+  "scripts": {
+    "postinstall": "npm link serverless-openwhisk"
+  },
+  "keywords": [
+    "serverless",
+    "openwhisk"
+  ]
+}

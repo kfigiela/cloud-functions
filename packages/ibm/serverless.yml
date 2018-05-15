@@ -1,0 +1,29 @@
+service: serverless-bluemix-random
+
+provider:
+  name: openwhisk
+  timeout: 240
+
+package:
+ include:
+   - bin/hello
+
+functions:
+  hello-128:
+    handler: handler.hello
+    memory: 128
+    events:
+      - http: GET hello-128
+  hello-256:
+    handler: handler.hello
+    memory: 256
+    events:
+      - http: GET hello-256
+  hello-512:
+    handler: handler.hello
+    memory: 512
+    events:
+      - http: GET hello-512
+
+plugins:
+  - serverless-openwhisk

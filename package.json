@@ -1,0 +1,10 @@
+{
+  "name": "@quirk0.o/serverless-research",
+  "version": "1.0.0",
+  "description": "",
+  "author": "quirk0.o <beata@obrok.eu>",
+  "license": "MIT",
+  "devDependencies": {
+    "lerna": "^2.10.2"
+  }
+}

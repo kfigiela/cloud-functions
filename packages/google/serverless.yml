@@ -1,0 +1,53 @@
+service: ${self:custom.service}
+
+provider:
+  name: google
+  stage: dev
+  runtime: nodejs
+  project: ${env:GOOGLE_CLOUD_PROJECT_NAME}
+  credentials: ${env:GOOGLE_CLOUD_KEYFILE}
+  timeout: 240s
+
+plugins:
+  - serverless-google-cloudfunctions
+
+custom: ${file(./environment/environment.js)}
+
+package:
+  exclude:
+    - node_modules/**
+    - .gitignore
+    - .git/**
+
+functions:
+  transfer-128:
+    handler: transfer${self:custom.suffix}-128
+    memorySize: 128
+    events:
+      - http: path
+  transfer-256:
+    handler: transfer${self:custom.suffix}-256
+    memorySize: 256
+    events:
+      - http: path
+  transfer-512:
+    handler: transfer${self:custom.suffix}-512
+    memorySize: 512
+    events:
+      - http: path
+  transfer-1024:
+    handler: transfer${self:custom.suffix}-1024
+    memorySize: 1024
+    events:
+      - http: path
+  transfer-2048:
+    handler: transfer${self:custom.suffix}-2048
+    memorySize: 2048
+    events:
+      - http: path
+
+resources:
+  resources:
+    - type: storage.v1.bucket
+      name: ${env:GOOGLE_STORAGE_BUCKET_NAME}
+

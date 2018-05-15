@@ -1,0 +1,2 @@
+bucket: serverless-research-aws-prod-bucket
+inputBucket: serverless-aws-random-dev-files

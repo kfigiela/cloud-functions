@@ -1,0 +1,20 @@
+service: serverless-azure-random
+
+provider:
+  name: azure
+  location: West US
+
+plugins:
+  - serverless-azure-functions
+
+functions:
+  hello:
+    handler: handler.hello
+    events:
+      - http: true
+        x-azure-settings:
+          authLevel : anonymous
+      - http: true
+        x-azure-settings:
+          diections: out
+          name: res

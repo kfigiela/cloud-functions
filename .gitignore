@@ -1,3 +1,8 @@
+sample_files
+**/.env
+.idea
+lib/
+
 # Logs
 logs
 *.log
