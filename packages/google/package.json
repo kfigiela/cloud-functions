@@ -1,7 +1,8 @@
 {
   "name": "@quirk0.o/serverless-research-gcf",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "",
+  "private": true,
   "main": "index.js",
   "scripts": {
     "deploy": "yarn env && sls deploy",

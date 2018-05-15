@@ -1,14 +1,14 @@
 {
-  "name": "aws",
-  "version": "1.0.0",
+  "name": "@quirk0.o/serverless-research-aws",
+  "version": "1.0.1",
   "description": "",
+  "private": true,
   "main": "handler.js",
   "dependencies": {
+    "@quirk0.o/cloud-functions-common": "2.0.4",
     "aws-sdk": "^2.82.0",
-    "bluebird": "^3.5.0",
-    "cloud-functions-common": "git+https://github.com/quirk0o/cloud-functions-common.git#v2.0.4"
+    "bluebird": "^3.5.0"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

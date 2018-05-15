@@ -1,6 +1,6 @@
 const Promise = require('bluebird')
 const azure = Promise.promisifyAll(require('azure-storage'))
-const ResponseBuilder = require('cloud-functions-common').ResponseBuilder
+const ResponseBuilder = require('@quirk0.o/cloud-functions-common').ResponseBuilder
 
 const STORAGE_CONNECTION_STRING = process.env.AZURE_STORAGE_CONNECTION_STRING
 const OUTPUT_CONTAINER = process.env.AZURE_STORAGE_CONTAINER

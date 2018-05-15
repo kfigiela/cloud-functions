@@ -1,7 +1,7 @@
 const Promise = require('bluebird')
 const AWS = require('aws-sdk')
 const s3 = Promise.promisifyAll(new AWS.S3())
-const ResponseBuilder = require('cloud-functions-common').ResponseBuilder
+const ResponseBuilder = require('@quirk0.o/cloud-functions-common').ResponseBuilder
 
 process.env['PATH'] = process.env['PATH'] + ':' + process.env['LAMBDA_TASK_ROOT'] + '/bin'
 const OUTPUT_BUCKET = process.env.BUCKET_NAME

@@ -33,9 +33,9 @@ buffer@4.9.1:
     ieee754 "^1.1.4"
     isarray "^1.0.0"
 
-"cloud-functions-common@git+https://github.com/quirk0o/cloud-functions-common.git#v2.0.3":
-  version "2.0.3"
-  resolved "git+https://github.com/quirk0o/cloud-functions-common.git#3b8a78ec468b9b8f0d7edb9355ab37f059afa2d0"
+"cloud-functions-common@git+https://github.com/quirk0o/cloud-functions-common.git#v2.0.4":
+  version "2.0.4"
+  resolved "git+https://github.com/quirk0o/cloud-functions-common.git#764ea3098c3de6d9acfbdbc4856853a84fe6c924"
 
 crypto-browserify@1.0.9:
   version "1.0.9"

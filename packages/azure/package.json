@@ -1,7 +1,8 @@
 {
-  "name": "azure-nodejs",
-  "version": "1.0.0",
+  "name": "@quirk0.o/serverless-research-azure",
+  "version": "1.0.1",
   "description": "Azure Functions sample for the Serverless framework",
+  "private": true,
   "main": "handler.js",
   "keywords": [
     "azure",
@@ -11,8 +12,8 @@
     "serverless-azure-functions": "*"
   },
   "dependencies": {
+    "@quirk0.o/cloud-functions-common": "2.0.4",
     "azure-storage": "^2.2.1",
-    "bluebird": "^3.5.0",
-    "cloud-functions-common": "git+https://github.com/quirk0o/cloud-functions-common.git#v2.0.4"
+    "bluebird": "^3.5.0"
   }
 }
