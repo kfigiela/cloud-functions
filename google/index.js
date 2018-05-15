@@ -1,91 +1,113 @@
 const runtimeConfig = require('cloud-functions-runtime-config')
 const storage = require('@google-cloud/storage')()
+const fs = require('fs')
 const stream = require('stream')
-const ResponseBuilder = require('cloud-functions-common').ResponseBuilder
 const streamToPromise = require('cloud-functions-common').streamToPromise
 
 const CONFIG_KEY = `serverless-research-config`
 const INPUT_BUCKET_CONFIG_KEY = 'buckets/input'
 const OUTPUT_BUCKET_CONFIG_KEY = 'buckets/output'
 
-function downloadRequest (fileName) {
-  console.log(`Downloading from gs://${fileName}`)
+const config = (key) => () => runtimeConfig.getVariable(CONFIG_KEY, key)
 
-  return runtimeConfig.getVariable(CONFIG_KEY, INPUT_BUCKET_CONFIG_KEY)
-    .then(inputBucketName => {
-      const inputBucket = storage.bucket(inputBucketName)
-      const inputFile = inputBucket.file(fileName)
+const tapP = (fn) => (value) => {
+  fn(value)
+  return value
+}
+const tapError = (fn) => (value) => {
+  fn(value)
+  return Promise.reject(value)
+}
+const logP = (fn) => tapP((value) => console.log(fn(value)))
+const pipeP = (...fns) => fns.reduce((prev, curr) => prev.then(curr), Promise.resolve())
 
-      return inputFile.download()
-        .then(data => {
-          return data[0]
-        })
-    })
+const timestampedFileName = () => `random_${(new Date()).toISOString()}`
+const file = (bucket, fileName) => storage.bucket(bucket).file(fileName)
+const readFile = (bucket, fileName) => {
+  const fileStream = file(bucket, fileName).createReadStream()
+  const writer = fs.createWriteStream('/tmp/input.dat')
+
+  return streamToPromise(fileStream.pipe(writer))
 }
 
-function uploadRequest (data) {
-  const fileName = `random_${(new Date()).toISOString()}`
-  console.log(`Uploading to gs://${fileName}`)
+const writeFile = (bucket, fileName) => {
+  const writeStream = file(bucket, fileName).createWriteStream()
+  const generator = new stream.Readable()
+  const size = 64 * 1024
+  const chunkSize = 16384
+  let i = 1
 
-  return runtimeConfig.getVariable(CONFIG_KEY, OUTPUT_BUCKET_CONFIG_KEY)
-    .then(outputBucketName => {
-      const outputBucket = storage.bucket(outputBucketName)
-      const outputFile = outputBucket.file(fileName)
-      const outputStream = outputFile.createWriteStream()
-      const bufferStream = new stream.PassThrough()
-      bufferStream.end(data)
+  generator._read = () => {
+    if (i > size) {
+      return generator.push(null)
+    }
+    generator.push('\0'.repeat(chunkSize))
+    i += chunkSize
+  }
 
-      return streamToPromise(bufferStream.pipe(outputStream))
-    })
+  generator.pipe(writeStream)
+}
+
+class Benchmark {
+  constructor() {
+    this._keys = []
+    this._queue = []
+    this._response = {}
+    this._time = {}
+  }
+
+  do(key) {
+    this._keys.push(key)
+    return (...fns) => {
+      this._queue.push(this._task(key, fns))
+      return this
+    }
+  }
+
+  json() {
+    return pipeP(...this._queue)
+      .then(() => Object.assign(
+        {
+          ts: (new Date()).toString(),
+          time: this._time
+        },
+        this._keys
+          .map(key => ({[key]: this._response[key]}))
+          .reduce((acc, response) => Object.assign(acc, response), {})
+      ))
+  }
+
+  _task(key, fns) {
+    return () => {
+      let hrtime = process.hrtime()
+      return pipeP(...fns)
+        .then(() => this._time[key] = process.hrtime(hrtime))
+        .then(logP(() => `${key} finished`))
+        .catch(tapError(logP(err => `${key} error: ${err}`)))
+        .catch(error => this._response[key] = {error})
+    }
+  }
 }
 
 exports.transfer = (request, response) => {
-  const responseBuilder = new ResponseBuilder()
+  const size = request.body.size
+  const inputFileName = request.body.fileName
 
-  responseBuilder.download(downloadRequest(request.body.fileName))
-    .then((data) => {
-      return responseBuilder.upload(uploadRequest(data))
-    })
-    .then(() => {
-      response.status(200).json(responseBuilder.toJSON())
-    })
-    .catch(() => {
-      response.status(200).json(responseBuilder.toJSON())
-    })
+  new Benchmark()
+    .do('download')(
+      config(INPUT_BUCKET_CONFIG_KEY),
+      (bucket) => readFile(bucket, inputFileName)
+    )
+    .do('upload')(
+      config(OUTPUT_BUCKET_CONFIG_KEY),
+      (bucket) => writeFile(bucket, timestampedFileName())
+    )
+    .json()
+    .then(logP(json => `Finished: ${JSON.stringify(json)}`))
+    .then(json => response.status(200).json(json))
 }
 
-exports.transfer_128 = (request, response) => {
-  const responseBuilder = new ResponseBuilder()
-
-  runtimeConfig.getVariable(CONFIG_KEY, INPUT_BUCKET_CONFIG_KEY)
-    .then(inputBucketName => {
-      const inputBucket = storage.bucket(inputBucketName)
-      const inputFile = inputBucket.file(request.body.fileName)
-
-      return inputFile.createReadStream()
-    })
-    .then(readStream => {
-      return runtimeConfig.getVariable(CONFIG_KEY, OUTPUT_BUCKET_CONFIG_KEY)
-        .then(outputBucketName => {
-          const outputBucket = storage.bucket(outputBucketName)
-          const outputFile = outputBucket.file(`random_${(new Date()).toISOString()}`)
-          const outputStream = outputFile.createWriteStream()
-
-          return streamToPromise(readStream.pipe(outputStream))
-        })
-    })
-    .then(() => {
-      responseBuilder._registerResponse(undefined, 'download')
-      responseBuilder._response.upload = responseBuilder._response.download
-      responseBuilder._time.upload = responseBuilder._time.download
-      response.status(200).json(responseBuilder.toJSON())
-    })
-    .catch((err) => {
-      responseBuilder._registerResponse(responseBuilder._formatStorageResponse(err), 'upload')
-      response.status(200).json(responseBuilder.toJSON())
-    })
-}
-
+exports.transfer_128 = exports.transfer
 exports.transfer_256 = exports.transfer
 exports.transfer_512 = exports.transfer
 exports.transfer_1024 = exports.transfer
