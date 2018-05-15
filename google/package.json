@@ -1,12 +1,14 @@
 {
-  "name": "boilerplate-googlecloudfunctions-nodejs",
-  "version": "0.1.0",
+  "name": "@quirk0.o/serverless-research-gcf",
+  "version": "2.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
+    "deploy": "yarn env && sls deploy",
+    "env": "SLS_STAGE=${SLS_STAGE:-dev} perl -p -e 's/\\$\\{env:([^}]+)\\}/defined $ENV{$1} ? $ENV{$1} : $&/eg; s/\\$\\{env:([^}]+)\\}//eg' environment/environment.build.js > environment/environment.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "serverless.com",
+  "author": "quirk0.o <beata@obrok.eu>",
   "license": "MIT",
   "dependencies": {
     "@google-cloud/storage": "^1.3.1",
@@ -14,6 +16,7 @@
     "cloud-functions-common": "git+https://github.com/quirk0o/cloud-functions-common.git#v2.0.4",
     "cloud-functions-runtime-config": "^0.1.1",
     "google-cloud": "^0.56.0",
+    "js-yaml": "^3.11.0",
     "serverless-google-cloudfunctions": "^1.0.0"
   },
   "peerDependencies": {

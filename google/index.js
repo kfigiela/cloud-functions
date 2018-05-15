@@ -3,6 +3,7 @@ const storage = require('@google-cloud/storage')()
 const fs = require('fs')
 const stream = require('stream')
 const streamToPromise = require('cloud-functions-common').streamToPromise
+const env = require('./environment')
 
 const CONFIG_KEY = `serverless-research-config`
 const INPUT_BUCKET_CONFIG_KEY = 'buckets/input'
@@ -107,8 +108,13 @@ exports.transfer = (request, response) => {
     .then(json => response.status(200).json(json))
 }
 
-exports.transfer_128 = exports.transfer
-exports.transfer_256 = exports.transfer
-exports.transfer_512 = exports.transfer
-exports.transfer_1024 = exports.transfer
-exports.transfer_2048 = exports.transfer
+exports['transfer-128'] = exports.transfer
+exports['transfer-256'] = exports.transfer
+exports['transfer-512'] = exports.transfer
+exports['transfer-1024'] = exports.transfer
+exports['transfer-2048'] = exports.transfer
+exports['transfer-dev-128'] = exports.transfer
+exports['transfer-dev-256'] = exports.transfer
+exports['transfer-dev-512'] = exports.transfer
+exports['transfer-dev-1024'] = exports.transfer
+exports['transfer-dev-2048'] = exports.transfer
