@@ -1,0 +1,7 @@
+#!/bin/sh
+
+export INFLUX_WRITE_URL="http://54.72.17.168:8086/write?db=cloudfunctions"
+export INFLUX_USER=...
+export INFLUX_PASSWORD="..."
+
+mix escript.build

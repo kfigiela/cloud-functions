@@ -1,17 +1,16 @@
 # Cloudfunctions
 
-**TODO: Add description**
+Probe is ready to be run in docker. Uses `elixir:1.4` image as runtime.
 
-## Installation
+Make run.sh/build.sh from templates.
 
-  1. Add cloudfunctions to your list of dependencies in mix.exs:
+Running probe:
+```shell
+docker run --rm -v $REPO_PATH/probe:/src elixir:1.4 /src/run.sh
+```
 
-        def deps do
-          [{:cloudfunctions, "~> 0.0.1"}]
-        end
+Building probe (into escript binary):
+```shell
+docker run --rm -v $REPO_PATH/probe:/src elixir:1.4 /src/build.sh
+```
 
-  2. Ensure cloudfunctions is started before your application:
-
-        def application do
-          [applications: [:cloudfunctions]]
-        end
