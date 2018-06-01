@@ -9,6 +9,12 @@ Running probe:
 docker run --rm -v $REPO_PATH/probe:/src elixir:1.4 /src/run.sh
 ```
 
+Run with cron:
+```
+*/5 * * * * docker run --rm -v $REPO_PATH/probe:/src elixir:1.4 /src/run.sh
+````
+
+
 Building probe (into escript binary):
 ```shell
 docker run --rm -v $REPO_PATH/probe:/src elixir:1.4 /src/build.sh
